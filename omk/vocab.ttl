@@ -1,0 +1,310 @@
+@prefix exam: <http://www.univ-example.fr/master/vocab#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+@prefix o: <http://omeka.org/s/vocabs/o#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix jdc: <https://examthyp.univ-paris8.fr/onto/jdc#> .
+@prefix ma: <http://www.w3.org/ns/ma-ont#>.
+
+# ============================================
+# ONTOLOGIE - Métadonnées
+# ============================================
+
+<http://www.exam.univ-paris8.fr/master/vocab#> a owl:Ontology ;
+    dcterms:title "Vocabulaire pour la Gestion des Évaluations en Master"@fr ;
+    dcterms:description "Ontologie pour décrire les étudiants, cours, évaluations et notes dans un programme de Master"@fr .
+
+# ============================================
+# CLASSES PRINCIPALES
+# ============================================
+
+# --- Personnes ---
+
+exam:Etudiant a rdfs:Class ;
+    rdfs:label "Étudiant"@fr;
+    rdfs:comment "Un étudiant inscrit dans un programme de Master"@fr ;
+    rdfs:subClassOf foaf:Person .
+
+exam:Enseignant a rdfs:Class ;
+    rdfs:label "Enseignant"@fr ;
+    rdfs:comment "Un enseignant responsable d'un ou plusieurs cours"@fr ;
+    rdfs:subClassOf foaf:Person .
+
+# --- Programme et Formation ---
+
+exam:Master a rdfs:Class ;
+    rdfs:label "Master"@fr ;
+    rdfs:comment "Un programme de Master (Bac+5)"@fr .
+
+exam:Parcours a rdfs:Class ;
+    rdfs:label "Parcours"@fr ;
+    rdfs:comment "Une spécialisation dans un Master"@fr .
+
+exam:Annee a rdfs:Class ;
+    rdfs:label "Année"@fr ;
+    rdfs:comment "Année d'étude (M1 ou M2)"@fr .
+
+exam:Semestre a rdfs:Class ;
+    rdfs:label "Semestre"@fr ;
+    rdfs:comment "Un semestre académique (S1, S2, S3, S4)"@fr .
+
+# --- Cours et Enseignement ---
+
+exam:Cours a rdfs:Class ;
+    rdfs:label "Cours"@fr ;
+    rdfs:comment "Une unité d'enseignement (UE)"@fr .
+
+exam:UE a rdfs:Class ;
+    rdfs:label "Unité d'Enseignement"@fr ;
+    rdfs:comment "Unité d'Enseignement composée d'un ou plusieurs cours"@fr .
+
+# --- Évaluations ---
+
+exam:Evaluation a rdfs:Class ;
+    rdfs:label "Évaluation"@fr ;
+    rdfs:comment "Une évaluation dans un cours (examen, projet, contrôle continu)"@fr .
+
+exam:Examen a rdfs:Class ;
+    rdfs:label "Examen"@fr ;
+    rdfs:comment "Un examen écrit ou oral"@fr ;
+    rdfs:subClassOf exam:Evaluation .
+
+exam:ControleContinu a rdfs:Class ;
+    rdfs:label "Contrôle Continu"@fr ;
+    rdfs:comment "Évaluation continue durant le semestre"@fr ;
+    rdfs:subClassOf exam:Evaluation .
+
+exam:Projet a rdfs:Class ;
+    rdfs:label "Projet"@fr ;
+    rdfs:comment "Un projet individuel ou de groupe"@fr ;
+    rdfs:subClassOf exam:Evaluation .
+
+exam:Presentation a rdfs:Class ;
+    rdfs:label "Présentation"@fr ;
+    rdfs:comment "Une présentation orale"@fr ;
+    rdfs:subClassOf exam:Evaluation .
+
+# --- Résultats ---
+
+exam:Note a rdfs:Class ;
+    rdfs:label "Note"@fr ;
+    rdfs:comment "Une note attribuée à un étudiant pour une évaluation"@fr .
+
+exam:Resultat a rdfs:Class ;
+    rdfs:label "Résultat"@fr ;
+    rdfs:comment "Résultat final d'un étudiant pour un cours"@fr .
+
+# ============================================
+# PROPRIÉTÉS - Relations entre personnes et formation
+# ============================================
+
+# --- Inscription et participation ---
+
+exam:inscritDans a rdf:Property ;
+    rdfs:label "inscrit dans"@fr ;
+    rdfs:comment "Relie un étudiant à un Master ou Parcours"@fr ;
+    rdfs:domain exam:Etudiant ;
+    rdfs:range [ owl:unionOf ( exam:Master exam:Parcours exam:Cours ) ] .
+
+exam:suitCours a rdf:Property ;
+    rdfs:label "suit cours"@fr ;
+    rdfs:comment "Relie un étudiant à un cours qu'il suit"@fr ;
+    rdfs:domain exam:Etudiant ;
+    rdfs:range exam:Cours .
+
+exam:enseignePar a rdf:Property ;
+    rdfs:label "enseigné par"@fr ;
+    rdfs:comment "Relie un cours à son enseignant"@fr ;
+    rdfs:domain exam:Cours ;
+    rdfs:range exam:Enseignant .
+
+exam:responsableDe a rdf:Property ;
+    rdfs:label "responsable de"@fr ;
+    rdfs:comment "Relie un enseignant aux cours dont il est responsable"@fr ;
+    rdfs:domain exam:Enseignant ;
+    rdfs:range exam:Cours .
+
+# --- Structure du programme ---
+
+exam:appartientA a rdf:Property ;
+    rdfs:label "appartient à"@fr ;
+    rdfs:comment "Relie un cours à une UE, un semestre, ou une année"@fr ;
+    rdfs:domain exam:Cours ;
+    rdfs:range [ owl:unionOf ( exam:UE exam:Semestre exam:Annee exam:Parcours ) ] .
+
+exam:composeDe a rdf:Property ;
+    rdfs:label "composé de"@fr ;
+    rdfs:comment "Relie une UE ou un parcours à ses cours"@fr ;
+    rdfs:range exam:Cours .
+
+# ============================================
+# PROPRIÉTÉS - Évaluations et Notes
+# ============================================
+
+exam:aEvaluation a rdf:Property ;
+    rdfs:label "a évaluation"@fr ;
+    rdfs:comment "Relie un cours à ses évaluations"@fr ;
+    rdfs:domain exam:Cours ;
+    rdfs:range exam:Evaluation .
+
+exam:evalueEtudiant a rdf:Property ;
+    rdfs:label "évalue étudiant"@fr ;
+    rdfs:comment "Relie une évaluation à un étudiant"@fr ;
+    rdfs:domain exam:Evaluation ;
+    rdfs:range exam:Etudiant .
+
+exam:aNote a rdf:Property ;
+    rdfs:label "a note"@fr ;
+    rdfs:comment "Relie un étudiant à une note pour une évaluation"@fr ;
+    rdfs:domain exam:Etudiant ;
+    rdfs:range exam:Note .
+
+exam:pourEvaluation a rdf:Property ;
+    rdfs:label "pour évaluation"@fr ;
+    rdfs:comment "Relie une note à l'évaluation concernée"@fr ;
+    rdfs:domain exam:Note ;
+    rdfs:range exam:Evaluation .
+
+exam:aResultat a rdf:Property ;
+    rdfs:label "a résultat"@fr ;
+    rdfs:comment "Relie un étudiant à son résultat final pour un cours"@fr ;
+    rdfs:domain exam:Etudiant ;
+    rdfs:range exam:Resultat .
+
+exam:pourCours a rdf:Property ;
+    rdfs:label "pour cours"@fr ;
+    rdfs:comment "Relie un résultat au cours concerné"@fr ;
+    rdfs:domain exam:Resultat ;
+    rdfs:range exam:Cours .
+
+exam:corrigePar a rdf:Property ;
+    rdfs:label "corrigé par"@fr ;
+    rdfs:comment "Relie une évaluation à l'enseignant qui l'a corrigée"@fr ;
+    rdfs:domain exam:Evaluation ;
+    rdfs:range exam:Enseignant .
+
+# ============================================
+# PROPRIÉTÉS - Données littérales
+# ============================================
+
+# --- Identifiants ---
+
+exam:numeroEtudiant a rdf:Property ;
+    rdfs:label "numéro étudiant"@fr ;
+    rdfs:comment "Numéro d'identification de l'étudiant"@fr ;
+    rdfs:domain exam:Etudiant ;
+    rdfs:range xsd:string .
+
+exam:codeCours a rdf:Property ;
+    rdfs:label "code cours"@fr ;
+    rdfs:comment "Code unique du cours (ex: INFO501)"@fr ;
+    rdfs:domain exam:Cours ;
+    rdfs:range xsd:string .
+
+# --- Informations personnelles ---
+
+exam:nom a rdf:Property ;
+    rdfs:label "nom"@fr ;
+    rdfs:domain foaf:Person ;
+    rdfs:range xsd:string .
+
+exam:prenom a rdf:Property ;
+    rdfs:label "prénom"@fr ;
+    rdfs:domain foaf:Person ;
+    rdfs:range xsd:string .
+
+exam:email a rdf:Property ;
+    rdfs:label "email"@fr ;
+    rdfs:domain foaf:Person ;
+    rdfs:range xsd:string .
+
+# --- Descripteurs de cours ---
+
+exam:titreCours a rdf:Property ;
+    rdfs:label "titre du cours"@fr ;
+    rdfs:domain exam:Cours ;
+    rdfs:range xsd:string .
+
+exam:credits a rdf:Property ;
+    rdfs:label "crédits ECTS"@fr ;
+    rdfs:comment "Nombre de crédits ECTS du cours"@fr ;
+    rdfs:domain exam:Cours ;
+    rdfs:range xsd:integer .
+
+exam:nombreHeures a rdf:Property ;
+    rdfs:label "nombre d'heures"@fr ;
+    rdfs:domain exam:Cours ;
+    rdfs:range xsd:integer .
+
+# --- Évaluations ---
+
+exam:typeEvaluation a rdf:Property ;
+    rdfs:label "type d'évaluation"@fr ;
+    rdfs:domain exam:Evaluation ;
+    rdfs:range xsd:string .
+
+exam:dateEvaluation a rdf:Property ;
+    rdfs:label "date de l'évaluation"@frn ;
+    rdfs:domain exam:Evaluation ;
+    rdfs:range xsd:date .
+
+exam:duree a rdf:Property ;
+    rdfs:label "durée"@fr ;
+    rdfs:comment "Durée de l'évaluation en minutes"@fr ;
+    rdfs:domain exam:Evaluation ;
+    rdfs:range xsd:integer .
+
+exam:coefficient a rdf:Property ;
+    rdfs:label "coefficient"@fr ;
+    rdfs:comment "Coefficient de l'évaluation dans la note finale"@fr ;
+    rdfs:domain exam:Evaluation ;
+    rdfs:range xsd:decimal .
+
+# --- Notes et résultats ---
+
+exam:valeurNote a rdf:Property ;
+    rdfs:label "valeur de la note"@fr ;
+    rdfs:comment "Valeur numérique de la note (0-20)"@fr ;
+    rdfs:domain exam:Note ;
+    rdfs:range xsd:decimal .
+
+exam:noteFinale a rdf:Property ;
+    rdfs:label "note finale"@fr ;
+    rdfs:comment "Note finale du cours (0-20)"@fr ;
+    rdfs:domain exam:Resultat ;
+    rdfs:range xsd:decimal .
+
+exam:mention a rdf:Property ;
+    rdfs:label "mention"@fr ;
+    rdfs:comment "Mention obtenue (Passable, AB, B, TB)"@fr ;
+    rdfs:domain exam:Resultat ;
+    rdfs:range xsd:string .
+
+exam:estValide a rdf:Property ;
+    rdfs:label "est validé"@fr ;
+    rdfs:comment "Indique si le cours est validé (true/false)"@fr ;
+    rdfs:domain exam:Resultat ;
+    rdfs:range xsd:boolean .
+
+exam:commentaire a rdf:Property ;
+    rdfs:label "commentaire"@fr ;
+    rdfs:comment "Commentaire sur l'évaluation ou le résultat"@fr ;
+    rdfs:range xsd:string .
+
+# --- Temporalité ---
+
+exam:anneeUniversitaire a rdf:Property ;
+    rdfs:label "année universitaire"@fr ;
+    rdfs:comment "Année universitaire (ex: 2024-2025)"@fr ;
+    rdfs:range xsd:string .
+
+exam:session a rdf:Property ;
+    rdfs:label "session"@fr ;
+    rdfs:comment "Session d'examen (1ère session, 2ème session/rattrapage)"@fr ;
+    rdfs:domain exam:Evaluation ;
+    rdfs:range xsd:string .
