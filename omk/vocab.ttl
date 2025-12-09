@@ -8,25 +8,18 @@
 @prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
 @prefix o: <http://omeka.org/s/vocabs/o#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
-@prefix jdc: <https://examthyp.univ-paris8.fr/onto/jdc#> .
+@prefix exam: <http://www.exam.univ-paris8.fr/onto/exam#> .
 @prefix ma: <http://www.w3.org/ns/ma-ont#>.
 
-# ============================================
-# ONTOLOGIE - Métadonnées
-# ============================================
 
-<http://www.exam.univ-paris8.fr/master/vocab#> a owl:Ontology ;
-    dcterms:title "Vocabulaire pour la Gestion des Évaluations en Master"@fr ;
-    dcterms:description "Ontologie pour décrire les étudiants, cours, évaluations et notes dans un programme de Master"@fr .
+<http://www.exam.univ-paris8.fr/onto/exam#> a owl:Ontology ;
+    dcterms:title "Vocabulaire pour la Gestion des Évaluations en Master"@fr .
 
-# ============================================
-# CLASSES PRINCIPALES
-# ============================================
 
 # --- Personnes ---
 
 exam:Etudiant a rdfs:Class ;
-    rdfs:label "Étudiant"@fr;
+    rdfs:label "Étudiant"@fr ;
     rdfs:comment "Un étudiant inscrit dans un programme de Master"@fr ;
     rdfs:subClassOf foaf:Person .
 
@@ -99,9 +92,6 @@ exam:Resultat a rdfs:Class ;
     rdfs:label "Résultat"@fr ;
     rdfs:comment "Résultat final d'un étudiant pour un cours"@fr .
 
-# ============================================
-# PROPRIÉTÉS - Relations entre personnes et formation
-# ============================================
 
 # --- Inscription et participation ---
 
@@ -142,9 +132,6 @@ exam:composeDe a rdf:Property ;
     rdfs:comment "Relie une UE ou un parcours à ses cours"@fr ;
     rdfs:range exam:Cours .
 
-# ============================================
-# PROPRIÉTÉS - Évaluations et Notes
-# ============================================
 
 exam:aEvaluation a rdf:Property ;
     rdfs:label "a évaluation"@fr ;
@@ -188,9 +175,6 @@ exam:corrigePar a rdf:Property ;
     rdfs:domain exam:Evaluation ;
     rdfs:range exam:Enseignant .
 
-# ============================================
-# PROPRIÉTÉS - Données littérales
-# ============================================
 
 # --- Identifiants ---
 
@@ -249,7 +233,7 @@ exam:typeEvaluation a rdf:Property ;
     rdfs:range xsd:string .
 
 exam:dateEvaluation a rdf:Property ;
-    rdfs:label "date de l'évaluation"@frn ;
+    rdfs:label "date de l'évaluation"@fr ;
     rdfs:domain exam:Evaluation ;
     rdfs:range xsd:date .
 
