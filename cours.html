@@ -53,6 +53,7 @@
         const api_url_media = "http://exam_thyp/api/media";
         const identity = "QzXQyiZ9hSrVYj7mx8xTBLPy5rM1p3rd";
         const credential = "7ZwDuhpuXGFfrp55l3XJiXYYvbhlM63A";
+        const userList = d3.select('#userList');
         // key_identity=QzXQyiZ9hSrVYj7mx8xTBLPy5rM1p3rd
         // key_credential=7ZwDuhpuXGFfrp55l3XJiXYYvbhlM63A
 
@@ -64,20 +65,19 @@
                 console.log(data);
 
                 if (data.length > 0) {
-                    data.forEach(user => {
+                    data.forEach(cour => {
 
-                        let code = user['http://www.exam.univ-paris8.fr/onto/exam#:codeCours'] ? user['http://www.exam.univ-paris8.fr/onto/exam#:codeCours'][0]['@value'] : '';
-                        let nom = user['http://www.exam.univ-paris8.fr/onto/exam#:titreCours'] ? user['http://www.exam.univ-paris8.fr/onto/exam#:titreCours'][0]['@value'] : '';
-                        let credit = user['http://www.exam.univ-paris8.fr/onto/exam#:credits'] ? user['http://www.exam.univ-paris8.fr/onto/exam#:credits'][0]['@value'] : '';
-                        let heure = user['http://www.exam.univ-paris8.fr/onto/exam#:nombreHeures'] ? user['http://www.exam.univ-paris8.fr/onto/exam#:nombreHeures'][0]['@value'] : '';
+                        let code = cour['http://www.exam.univ-paris8.fr/onto/exam#:codeCours'] ? cour['http://www.exam.univ-paris8.fr/onto/exam#:codeCours'][0]['@value'] : '';
+                        let nom = cour['http://www.exam.univ-paris8.fr/onto/exam#:titreCours'] ? cour['http://www.exam.univ-paris8.fr/onto/exam#:titreCours'][0]['@value'] : '';
+                        let credit = cour['http://www.exam.univ-paris8.fr/onto/exam#:credits'] ? cour['http://www.exam.univ-paris8.fr/onto/exam#:credits'][0]['@value'] : '';
+                        let heure = cour['http://www.exam.univ-paris8.fr/onto/exam#:nombreHeures'] ? cour['http://www.exam.univ-paris8.fr/onto/exam#:nombreHeures'][0]['@value'] : '';
 
                         let ligne =
                             `<tr id="user-${id_user}">
-                                <td>${prenom}</td>
+                                <td>${code}</td>
                                 <td>${nom}</td>
-                                <td>${email}</td>
-                                <td>${role}</td>
-                                <td><button type="submit" class="btn btn-outline-danger btn-sm btn-supprimer" data-id="${id_user}">Supprimer</button></td>
+                                <td>${credit}</td>
+                                <td>${heure}</td>
                             </tr>`;
                         userList.append('tr').html(ligne);
 
